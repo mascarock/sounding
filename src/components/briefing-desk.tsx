@@ -25,6 +25,25 @@ const HARBOURS = [
   "Marina di Ragusa",
 ];
 
+const CASE_STEPS = [
+  {
+    label: "Old book",
+    text: "Pocket notes put the Marsamxett inner pontoon at 2.1 m and welcome visiting day-boats.",
+  },
+  {
+    label: "Later notice",
+    text: "HN-2024-17 supersedes that book: winter silt leaves the inner pontoon at 1.4 m.",
+  },
+  {
+    label: "Friday ferry",
+    text: "HN-2025-03 cites the notice and takes Outer North and Outer South after 18:00 Fridays.",
+  },
+  {
+    label: "Strong gregale",
+    text: "A NE 20 kn rule says those outer berths are the only sheltered visitor berths.",
+  },
+];
+
 export function BriefingDesk({
   question,
   answer,
@@ -50,6 +69,46 @@ export function BriefingDesk({
           Demonstration data. Not an official navigation publication. The pocket notes, harbour notices, depths,
           reservations, and weather rules here are invented. Do not use this for real navigation.
         </p>
+        <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+          <div className="border border-brass/35 bg-water/55 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-display text-2xl leading-tight text-cream">Marsamxett answer: no safe visitor berth</h2>
+              <Badge variant="signal">No-go</Badge>
+            </div>
+            <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+              {CASE_STEPS.map((step, index) => (
+                <li key={step.label} className="min-w-0 border-t border-cream/15 pt-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-brass">
+                    {String(index + 1).padStart(2, "0")} · {step.label}
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-foam">{step.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="border border-foam/20 bg-harbour/70 p-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-brass">
+              Sanity document walk
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-foam">
+              The answer is resolved from Sanity-shaped documents and references, not a harbour-name keyword search.
+            </p>
+            <dl className="mt-4 space-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-cream">
+              <div className="flex justify-between gap-3">
+                <dt className="text-foam/70">Project</dt>
+                <dd>59vrectd</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-foam/70">Dataset</dt>
+                <dd>production</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-foam/70">Knowledge base</dt>
+                <dd>kbl6C1tJBXli</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
         <ul className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-wider text-foam/80">
           {HARBOURS.map((name) => (
             <li key={name} className="border border-foam/20 px-2 py-1">
