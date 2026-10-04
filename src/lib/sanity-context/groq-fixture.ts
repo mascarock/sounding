@@ -255,8 +255,6 @@ function evalFilter(expr: string, doc: SeedDocument, params: Record<string, unkn
 
     const leftTok = p.peek();
     let left: unknown;
-    let leftIsPath = false;
-    let leftPath = "";
     if (leftTok?.t === "param") {
       left = params[leftTok.v];
       p.eat();
@@ -264,9 +262,8 @@ function evalFilter(expr: string, doc: SeedDocument, params: Record<string, unkn
       left = leftTok.v;
       p.eat();
     } else if (leftTok?.t === "ident") {
-      leftPath = parsePath(p);
+      const leftPath = parsePath(p);
       left = getPath(doc, leftPath);
-      leftIsPath = true;
     } else {
       throw new Error("Invalid filter atom");
     }
@@ -275,12 +272,12 @@ function evalFilter(expr: string, doc: SeedDocument, params: Record<string, unkn
     if (opTok?.t === "ident" && (opTok.v === "in" || opTok.v === "match")) {
       const op = opTok.v;
       p.eat();
-      return applyOp(op, left, parseRight(), leftPath, leftIsPath);
+      return applyOp(op, left, parseRight());
     }
     if (opTok?.t === "op" && ["==", "!=", ">", "<", ">=", "<="].includes(opTok.v)) {
       const op = opTok.v;
       p.eat();
-      return applyOp(op, left, parseRight(), leftPath, leftIsPath);
+      return applyOp(op, left, parseRight());
     }
     return Boolean(left);
   }
@@ -327,7 +324,7 @@ function evalFilter(expr: string, doc: SeedDocument, params: Record<string, unkn
     throw new Error("Invalid right-hand value");
   }
 
-  function applyOp(op: string, left: unknown, right: unknown, _leftPath: string, _leftIsPath: boolean): boolean {
+  function applyOp(op: string, left: unknown, right: unknown): boolean {
     if (op === "match") {
       const needle = String(right ?? "").toLowerCase();
       return String(left ?? "")
@@ -354,17 +351,6 @@ function evalFilter(expr: string, doc: SeedDocument, params: Record<string, unkn
 
   const result = parseOr();
   return result;
-}
-
-function projectValue(
-  value: unknown,
-  corpus: SeedDocument[],
-  projection: string | null,
-): unknown {
-  if (!projection) return value;
-  if (Array.isArray(value)) return value.map((v) => projectValue(v, corpus, projection));
-  if (!value || typeof value !== "object") return value;
-  return projectDoc(value as SeedDocument, corpus, projection);
 }
 
 function resolveRef(ref: unknown, corpus: SeedDocument[]): SeedDocument | undefined {

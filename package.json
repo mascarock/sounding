@@ -21,6 +21,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sanity": "^6.17.0",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {

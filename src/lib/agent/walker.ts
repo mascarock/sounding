@@ -6,6 +6,7 @@ import type {
   BriefAnswer,
   ClaimRow,
   Contradiction,
+  DocumentRelation,
   HarbourRow,
   RuleTrigger,
   SourceRow,
@@ -102,6 +103,7 @@ export async function walkBrief(client: ContextClient, question: string): Promis
       verdict: "conditional",
       recommendation:
         "Name one of the eight harbours — Marsamxett, Mgarr (Gozo), Xlendi, Grand Harbour, Syracuse, Pozzallo, Marzamemi, or Marina di Ragusa — and a draft. The walker will not guess a harbour.",
+      documentRelations: [],
       contradictions: [],
       walked: client.openedDocuments(),
       wind: { knots: null, directionDegrees: null, directionLabel: "unknown", source: "unavailable", at: null },
@@ -123,6 +125,7 @@ export async function walkBrief(client: ContextClient, question: string): Promis
       contextSource: client.source,
       verdict: "conditional",
       recommendation: `No harbour document matched “${parsed.harbourQuery}”.`,
+      documentRelations: [],
       contradictions: [],
       walked: client.openedDocuments(),
       wind: { knots: null, directionDegrees: null, directionLabel: "unknown", source: "unavailable", at: null },
@@ -207,6 +210,46 @@ export async function walkBrief(client: ContextClient, question: string): Promis
   );
 
   const docs = [...docsById.values()];
+  const docLabel = (doc: SourceRow | null | undefined): string => doc?.code ?? doc?._id ?? "unknown document";
+  const documentRelations: DocumentRelation[] = docs.flatMap((doc) => {
+    const rows: DocumentRelation[] = [];
+    const superseded = doc.supersedes?._ref ? docsById.get(doc.supersedes._ref) : null;
+    if (superseded) {
+      rows.push({
+        relation: "supersedes",
+        fromId: doc._id,
+        fromCode: docLabel(doc),
+        fromTitle: doc.title ?? docLabel(doc),
+        fromIssuedOn: doc.issuedOn,
+        fromExcerpt: groundedSentence(doc, ""),
+        toId: superseded._id,
+        toCode: docLabel(superseded),
+        toTitle: superseded.title ?? docLabel(superseded),
+        toIssuedOn: superseded.issuedOn,
+        toExcerpt: groundedSentence(superseded, ""),
+        detail: `${docLabel(doc)} replaces ${docLabel(superseded)}.`,
+      });
+    }
+    for (const citedRef of doc.cites ?? []) {
+      const cited = citedRef._ref ? docsById.get(citedRef._ref) : null;
+      if (!cited) continue;
+      rows.push({
+        relation: "cites",
+        fromId: doc._id,
+        fromCode: docLabel(doc),
+        fromTitle: doc.title ?? docLabel(doc),
+        fromIssuedOn: doc.issuedOn,
+        fromExcerpt: groundedSentence(doc, ""),
+        toId: cited._id,
+        toCode: docLabel(cited),
+        toTitle: cited.title ?? docLabel(cited),
+        toIssuedOn: cited.issuedOn,
+        toExcerpt: groundedSentence(cited, ""),
+        detail: `${docLabel(doc)} cites ${docLabel(cited)}.`,
+      });
+    }
+    return rows;
+  });
   let wind: WindObservation = {
     knots: null,
     directionDegrees: null,
@@ -363,7 +406,7 @@ export async function walkBrief(client: ContextClient, question: string): Promis
   }
   if (usable.length === 0) {
     sentences.push(
-      `Do not plan a visitor berth at ${harbour.name}${askedNames[0] ? ` (${askedNames.join(", ")})` : ""}${draft != null ? ` for a ${draft} m draft` : ""}${parsed.weekday ? ` arriving ${parsed.weekday}` : ""}${parsed.afterTime ? ` after ${parsed.afterTime}` : ""}${parsed.windName ? ` in a ${parsed.windName}` : ""}.`,
+      `No safe visitor berth at ${harbour.name}${askedNames[0] ? ` (${askedNames.join(", ")})` : ""}${draft != null ? ` for a ${draft} m draft` : ""}${parsed.weekday ? ` arriving ${parsed.weekday}` : ""}${parsed.afterTime ? ` after ${parsed.afterTime}` : ""}${parsed.windName ? ` in a ${parsed.windName}` : ""}.`,
     );
     const reasonSet = new Set<string>();
     for (const ev of evaluations) {
@@ -407,6 +450,7 @@ export async function walkBrief(client: ContextClient, question: string): Promis
     contextSource: client.source,
     verdict,
     recommendation: unique.join(" "),
+    documentRelations,
     contradictions,
     walked: client.openedDocuments(),
     wind,

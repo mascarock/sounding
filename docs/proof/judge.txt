@@ -1,0 +1,93 @@
+
+> sounding@0.1.0 judge
+> tsx scripts/judge.ts
+
+Sounding judge cases · seed 140 documents
+
+Q  Friday after 18:00, Marsamxett inner pontoon, 1.7 m draft, gregale expected.
+   Expected verdict: no-go
+   Walker verdict:   no-go OK
+   Expected recommendation:
+   No safe visitor berth. HN-2024-17 supersedes the 2019 inner-pontoon figure of 2.1 m and records 1.4 m on the inner fingers. HN-2025-03 cites that notice and reserves Outer North and Outer South for the ferry Friday after 18:00. The gregale rule at 20 kn names those same outer berths as the only sheltered visitor berths.
+   Walker recommendation:
+   No safe visitor berth at Marsamxett (Inner Pontoon A, Inner Pontoon B, Inner Pontoon C) for a 1.7 m draft arriving friday after 18:00 in a gregale. After winter silt in Lazzaretto Creek the inner pontoon sounds 1.4 metres at chart datum. In a gregale at or above 20 knots the sheltered visitor berths at Marsamxett are exactly Outer North and Outer South. The outer two visitor berths at Marsamxett are reserved for the scheduled ferry relief on Fridays after 18:00. HN-2024-17 supersedes ALM-2019-MARSA-PONTOON.
+   Documents walked:
+     - harbour-marsamxett
+     - berth-marsa-fuel-wall
+     - berth-marsa-inner-a
+     - berth-marsa-inner-b
+     - berth-marsa-inner-c
+     - berth-marsa-outer-north
+     - berth-marsa-outer-south
+     - doc-alm-2019-marsa-fuel
+     - doc-alm-2019-marsa-pontoon
+     - doc-alm-2019-marsa-radio
+     - doc-hn-2024-17
+     - doc-hn-2025-03
+     - doc-wr-marsa-gregale
+     - claim-marsa-fuel
+     - claim-marsa-gregale-shelter
+     - claim-marsa-inner-access-alm
+     - claim-marsa-inner-b-depth-hn17
+     - claim-marsa-inner-c-depth-hn17
+     - claim-marsa-inner-depth-alm
+     - claim-marsa-inner-depth-hn17
+     - claim-marsa-outer-reserve
+     - claim-marsa-outer-south-reserve
+   Required ids: OK
+   Keyword trap: Keyword search for “Marsamxett” would have opened ALM-2019-MARSA-PONTOON and repeated: Soundings Pocket Notes, 2019 sheet M-4.
+
+Q  Syracuse inner basin east, 2.8 m draft this weekend.
+   Expected verdict: no-go
+   Walker verdict:   no-go OK
+   Expected recommendation:
+   Do not enter Inner Basin East. Almanac 3.5 m is superseded by HN-2025-11 after silt survey SS-2025-02 measured 2.2 m. The notice closes the wall to drafts over 2.0 m.
+   Walker recommendation:
+   No safe visitor berth at Syracuse (Inner Basin East) for a 2.8 m draft. Inner Basin East is closed to drafts over 2.0 metres until the spring dredge. Gregale 25 knots or more: inner basin at Syracuse is uncomfortable; the outer mole is the named fallback. Inner Basin East, Syracuse: four pole soundings average 2.2 metres at chart datum after winter flood debris. HN-2025-11 supersedes ALM-2019-SYR-BASIN.
+   Documents walked:
+     - harbour-syracuse
+     - berth-syr-inner-east
+     - berth-syr-inner-west
+     - berth-syr-ortigia-wall
+     - berth-syr-outer-mole
+     - berth-syr-yacht-club
+     - doc-alm-2019-syr-basin
+     - doc-alm-2019-syr-club
+     - doc-alm-2019-syr-mole
+     - doc-hn-2025-11
+     - doc-wr-syr-gregale
+     - doc-ss-2025-02
+     - claim-syr-club
+     - claim-syr-east-alm
+     - claim-syr-east-notice
+     - claim-syr-east-survey
+     - claim-syr-mole-alm
+   Required ids: OK
+   Keyword trap: Keyword search for “Syracuse” would have opened ALM-2019-SYR-BASIN and repeated: Soundings Pocket Notes, 2019 sheet S-2.
+
+Q  Pozzallo commercial quay, 2.9 m draft.
+   Expected verdict: no-go
+   Walker verdict:   no-go OK
+   Expected recommendation:
+   Do not berth on the commercial quay. Standing depth is 2.8 m from HN-2024-44, which supersedes the 2019 pocket note. HN-2025-08 is later and claims 3.2 m but does not supersede HN-2024-44, so 3.2 m is not standing.
+   Walker recommendation:
+   No safe visitor berth at Pozzallo (Commercial quay) for a 2.9 m draft. Dredge spoil along the Pozzallo commercial quay reduces standing depth to 2.8 metres at chart datum. A visiting yacht-club party reported 3.2 metres alongside the Pozzallo commercial quay after an informal lead-line. Standing figure is HN-2024-44 because of the supersedes chain, not the later date.
+   Documents walked:
+     - harbour-pozzallo
+     - berth-poz-commercial
+     - berth-poz-fishermen
+     - berth-poz-outer-breakwater
+     - berth-poz-ro-ro
+     - berth-poz-visitor-south
+     - doc-alm-2019-poz-commercial
+     - doc-alm-2019-poz-visitor
+     - doc-hn-2024-44
+     - doc-hn-2025-08
+     - claim-poz-comm-alm
+     - claim-poz-comm-hn08
+     - claim-poz-comm-hn44
+     - claim-poz-vis-alm
+   Required ids: OK
+   Keyword trap: Keyword search for “Pozzallo” would have opened ALM-2019-POZ-COMM and repeated: Soundings Pocket Notes, 2019 sheet P-1.
+
+All required chains opened and verdicts matched.

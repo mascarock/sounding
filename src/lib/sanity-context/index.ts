@@ -1,3 +1,5 @@
+import "server-only";
+
 import { FixtureContextClient } from "./fixture";
 import { LiveContextClient } from "./live";
 import type { ContextClient } from "./types";

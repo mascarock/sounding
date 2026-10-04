@@ -1,6 +1,6 @@
 import { JUDGE_CASES } from "../src/lib/agent/judge-cases";
 import { walkBrief } from "../src/lib/agent/walker";
-import { createContextClient } from "../src/lib/sanity-context";
+import { FixtureContextClient } from "../src/lib/sanity-context/fixture";
 import { SEED_COUNTS } from "../sanity/seed-data";
 
 async function main() {
@@ -8,7 +8,7 @@ async function main() {
   console.log("");
   let failed = 0;
   for (const c of JUDGE_CASES) {
-    const client = createContextClient();
+    const client = new FixtureContextClient();
     const answer = await walkBrief(client, c.question);
     const opened = answer.walked.map((d) => d.id);
     const missing = c.mustOpen.filter((id) => !opened.includes(id));

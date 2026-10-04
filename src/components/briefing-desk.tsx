@@ -35,18 +35,20 @@ export function BriefingDesk({
   error: string | null;
 }) {
   return (
-    <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:py-12">
+    <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 overflow-x-hidden px-4 py-8 sm:px-6 lg:py-12">
       <header className="flex flex-col gap-4 border-b border-cream/15 pb-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-brass">Day-boat harbour desk</p>
             <h1 className="mt-1 font-display text-5xl leading-none text-cream sm:text-6xl">Sounding</h1>
           </div>
-          <Badge variant="brass">Central Mediterranean · eight harbours</Badge>
+          <Badge variant="brass" className="max-w-full break-words">
+            Central Mediterranean · eight harbours
+          </Badge>
         </div>
         <p className="max-w-3xl text-sm leading-relaxed text-foam sm:text-base">
-          Demonstration data. Not an official navigation publication. Invented pocket notes and harbour notices —
-          do not take these figures to sea.
+          Demonstration data. Not an official navigation publication. The pocket notes, harbour notices, depths,
+          reservations, and weather rules here are invented. Do not use this for real navigation.
         </p>
         <ul className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-wider text-foam/80">
           {HARBOURS.map((name) => (
@@ -61,12 +63,13 @@ export function BriefingDesk({
         <label htmlFor="question" className="font-mono text-[11px] uppercase tracking-[0.2em] text-brass">
           Ask as you would on the VHF
         </label>
-        <form action="/" method="get" className="flex flex-col gap-3 sm:flex-row">
+        <form action="/" method="get" className="flex min-w-0 flex-col gap-3 sm:flex-row">
           <Input
             id="question"
             name="q"
             defaultValue={question || CHIPS[0]}
             placeholder="Harbour, draft, day, wind…"
+            className="min-w-0"
           />
           <SubmitButton />
         </form>
@@ -108,30 +111,41 @@ export function BriefingDesk({
 
 function AnswerPanel({ answer }: { answer: BriefAnswer }) {
   const hasConflict = answer.contradictions.length > 0;
+  const supersedes = answer.documentRelations.filter((relation) => relation.relation === "supersedes");
+  const citations = answer.documentRelations.filter((relation) => relation.relation === "cites");
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex min-w-0 flex-col gap-6">
+      <Card className="border-brass/50 bg-harbour/80">
+        <CardHeader>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brass">Skipper&apos;s question</p>
+        </CardHeader>
+        <CardContent className="py-4">
+          <p className="break-words font-display text-2xl leading-snug text-cream">{answer.question}</p>
+        </CardContent>
+      </Card>
+
       <Card className="bg-cream text-cream-ink">
         <CardHeader className="flex flex-col gap-2 border-cream-ink/15 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Recommendation</span>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Desk answer</span>
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cream-ink/60">
               {answer.verdict}
             </span>
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cream-ink/60">
+          <span className="break-words font-mono text-[10px] uppercase tracking-[0.16em] text-cream-ink/60">
             {answer.mode === "llm" ? "Model + tools" : "Deterministic walker"} · {answer.contextSource}
           </span>
         </CardHeader>
         <CardContent className="space-y-3 py-5">
-          <p className="font-display text-2xl leading-snug sm:text-3xl">{answer.recommendation}</p>
+          <p className="break-words font-display text-2xl leading-snug sm:text-3xl">{answer.recommendation}</p>
           <p className="text-sm text-cream-ink/70">
-            Demonstration data. Not an official navigation publication.
+            Demonstration data, invented for the challenge. Not for real navigation.
           </p>
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+      <div className="grid min-w-0 gap-4 lg:grid-cols-2">
+        <Card className="min-w-0">
           <CardHeader>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brass">Live wind · Open-Meteo</p>
           </CardHeader>
@@ -152,12 +166,16 @@ function AnswerPanel({ answer }: { answer: BriefAnswer }) {
                 <p>
                   {rule.triggered ? "Triggered" : "Did not trigger"} · {rule.detail}
                 </p>
-                <p className="mt-1 italic text-foam/80">{rule.effect}</p>
+                <p className="mt-1 break-words italic text-foam/80">{rule.effect}</p>
               </div>
             ))}
           </CardContent>
         </Card>
 
+        <DocumentTrail supersedes={supersedes} citations={citations} />
+      </div>
+
+      <div className="grid min-w-0 gap-4 lg:grid-cols-2">
         <Card className={hasConflict ? "border-signal" : ""}>
           <CardHeader className="flex items-center justify-between">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brass">Contradicting claims</p>
@@ -169,14 +187,14 @@ function AnswerPanel({ answer }: { answer: BriefAnswer }) {
             ) : (
               answer.contradictions.map((c) => (
                 <div key={`${c.aboutId}-${c.left.sourceId}-${c.right.sourceId}`} className="space-y-3">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-cream">
+                  <p className="break-words font-mono text-[11px] uppercase tracking-[0.16em] text-cream">
                     {c.aboutName} · {c.topic}
                   </p>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <ClaimSheet claim={c.left} standing={c.standingSourceId === c.left.sourceId} />
                     <ClaimSheet claim={c.right} standing={c.standingSourceId === c.right.sourceId} />
                   </div>
-                  <p className="text-xs text-foam">{c.reason}</p>
+                  <p className="break-words text-xs text-foam">{c.reason}</p>
                 </div>
               ))
             )}
@@ -194,9 +212,9 @@ function AnswerPanel({ answer }: { answer: BriefAnswer }) {
           ) : (
             <ol className="space-y-2">
               {answer.walked.map((doc, i) => (
-                <li key={`${doc.id}-${i}`} className="flex gap-3 font-mono text-xs text-foam">
+                <li key={`${doc.id}-${i}`} className="flex min-w-0 gap-3 font-mono text-xs text-foam">
                   <span className="w-6 shrink-0 text-brass">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="text-cream">{doc.id}</span>
+                  <span className="min-w-0 break-all text-cream">{doc.id}</span>
                   <span className="hidden sm:inline">{doc.code ?? doc.kind ?? doc.type}</span>
                   <span className="min-w-0 truncate text-foam/70">{doc.title}</span>
                 </li>
@@ -209,13 +227,74 @@ function AnswerPanel({ answer }: { answer: BriefAnswer }) {
       {answer.keywordTrap ? (
         <>
           <Separator />
-          <p className="text-sm text-foam">
+          <p className="break-words text-sm text-foam">
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-brass">Keyword search would have been wrong. </span>
             {answer.keywordTrap}
           </p>
         </>
       ) : null}
     </div>
+  );
+}
+
+function DocumentTrail({
+  supersedes,
+  citations,
+}: {
+  supersedes: BriefAnswer["documentRelations"];
+  citations: BriefAnswer["documentRelations"];
+}) {
+  return (
+    <Card className="min-w-0 border-brass/40">
+      <CardHeader className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brass">Notice replacements</p>
+        {supersedes.length ? <Badge variant="brass">Walked</Badge> : <Badge>None</Badge>}
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {supersedes.length === 0 ? (
+          <p className="text-sm text-foam">No opened notice explicitly replaced another source.</p>
+        ) : (
+          supersedes.map((relation) => (
+            <div key={`${relation.fromId}-${relation.toId}`} className="min-w-0 border-l border-brass/60 pl-3">
+              <p className="break-words font-mono text-[10px] uppercase tracking-[0.16em] text-brass">
+                {relation.fromIssuedOn ?? "undated"} replaces {relation.toIssuedOn ?? "undated"}
+              </p>
+              <p className="mt-1 break-words text-sm leading-snug text-cream">
+                {relation.fromCode} replaces {relation.toCode}
+              </p>
+              <p className="mt-1 break-words text-xs leading-relaxed text-foam">
+                {relation.fromTitle} / {relation.toTitle}
+              </p>
+              <div className="mt-3 grid min-w-0 gap-2 text-xs leading-relaxed text-foam sm:grid-cols-2">
+                <p className="min-w-0 break-words border border-foam/15 bg-harbour/40 p-2">
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-foam/70">
+                    Replaced source
+                  </span>
+                  {relation.toExcerpt || "No excerpt available."}
+                </p>
+                <p className="min-w-0 break-words border border-brass/30 bg-brass/10 p-2 text-cream">
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-brass">
+                    Standing notice
+                  </span>
+                  {relation.fromExcerpt || "No excerpt available."}
+                </p>
+              </div>
+            </div>
+          ))
+        )}
+
+        {citations.length ? (
+          <div className="space-y-2 border-t border-cream/10 pt-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foam/80">Cited later</p>
+            {citations.map((relation) => (
+              <p key={`${relation.fromId}-${relation.toId}`} className="break-words text-xs leading-relaxed text-foam">
+                {relation.fromCode} cites {relation.toCode}
+              </p>
+            ))}
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -227,12 +306,12 @@ function ClaimSheet({
   standing: boolean;
 }) {
   return (
-    <div className="bg-cream p-3 text-cream-ink">
+    <div className="min-w-0 bg-cream p-3 text-cream-ink">
       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cream-ink/60">
-        {standing ? "Standing" : "Contradicted"} · {claim.issuedOn ?? "undated"}
+        {standing ? "Standing now" : "Replaced / not standing"} · {claim.issuedOn ?? "undated"}
       </p>
-      <p className="mt-1 text-sm leading-snug">{claim.statement}</p>
-      <p className="mt-2 font-mono text-[10px] text-cream-ink/70">
+      <p className="mt-1 break-words text-sm leading-snug">{claim.statement}</p>
+      <p className="mt-2 break-words font-mono text-[10px] text-cream-ink/70">
         {claim.sourceId}
         <br />
         {claim.sourceTitle}

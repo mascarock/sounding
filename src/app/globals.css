@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-harbour: #071018;
-  --color-water: #0a1624;
-  --color-ink: #0c1a2b;
-  --color-cream: #f0e4c8;
-  --color-cream-dark: #d9cba8;
-  --color-cream-ink: #2a2418;
-  --color-brass: #c4a15a;
-  --color-signal: #c42b2b;
-  --color-foam: #9eb3c4;
+  --color-harbour: #10231f;
+  --color-water: #17332e;
+  --color-ink: #15221e;
+  --color-cream: #f6edd8;
+  --color-cream-dark: #d9c59f;
+  --color-cream-ink: #2c2619;
+  --color-brass: #c28b3c;
+  --color-signal: #b73a34;
+  --color-foam: #bfd2cc;
   --font-display: var(--font-fraunces);
   --font-serif: var(--font-source);
   --font-mono: var(--font-plex);
@@ -23,8 +23,8 @@ body {
 body {
   background-color: var(--color-harbour);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196, 161, 90, 0.12), transparent),
-    linear-gradient(180deg, #0b1826 0%, #071018 42%, #050c14 100%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(194, 139, 60, 0.16), transparent),
+    linear-gradient(180deg, #183b34 0%, #10231f 46%, #0a1714 100%);
   color: var(--color-cream);
   font-family: var(--font-serif), "Times New Roman", serif;
 }

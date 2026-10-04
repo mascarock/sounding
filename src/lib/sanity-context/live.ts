@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { ContextClient, ContextToolName, OpenedDocument, ToolResult } from "./types";
 
 type JsonRpc = {

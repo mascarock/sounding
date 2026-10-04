@@ -1,3 +1,5 @@
+import "server-only";
+
 import { CONTEXT_TOOL_DESCRIPTIONS, type ContextClient, type ContextToolName } from "../sanity-context";
 import type { WindObservation } from "../weather";
 import { SYSTEM_PROMPT } from "./prompts";
@@ -112,6 +114,7 @@ export async function runLlmBrief(
         contextSource: client.source,
         verdict: /no safe|do not|closed|must not/i.test(text) ? "no-go" : "conditional",
         recommendation: text,
+        documentRelations: [],
         contradictions: [],
         walked: client.openedDocuments(),
         wind,

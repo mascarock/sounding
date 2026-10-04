@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { MAX_QUESTION_LENGTH, normalizeQuestion } from "@/lib/agent/input";
 import { runBrief } from "@/lib/agent/run";
 import { contextMode } from "@/lib/sanity-context";
 
@@ -8,7 +9,7 @@ export async function POST(req: Request) {
   let question = "";
   try {
     const body = (await req.json()) as { question?: string };
-    question = (body.question ?? "").trim();
+    question = normalizeQuestion(body.question);
   } catch {
     return NextResponse.json({ error: "Send JSON { question }." }, { status: 400 });
   }
@@ -19,8 +20,9 @@ export async function POST(req: Request) {
     const answer = await runBrief(question);
     return NextResponse.json({ ...answer, contextMode: contextMode() });
   } catch (error) {
+    console.error("Briefing API failed", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Briefing failed" },
+      { error: `Briefing failed. Questions are capped at ${MAX_QUESTION_LENGTH} characters and fixture mode needs no keys.` },
       { status: 500 },
     );
   }

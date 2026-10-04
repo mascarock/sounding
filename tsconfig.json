@@ -30,5 +30,12 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "salt-wharf",
+    "salt-wharf/**",
+    "sanity/schema/**",
+    "sanity.config.ts",
+    "sanity.cli.ts"
+  ]
 }

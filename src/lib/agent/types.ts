@@ -22,12 +22,28 @@ export type RuleTrigger = {
   detail: string;
 };
 
+export type DocumentRelation = {
+  relation: "supersedes" | "cites";
+  fromId: string;
+  fromCode: string;
+  fromTitle: string;
+  fromIssuedOn?: string;
+  fromExcerpt?: string;
+  toId: string;
+  toCode: string;
+  toTitle: string;
+  toIssuedOn?: string;
+  toExcerpt?: string;
+  detail: string;
+};
+
 export type BriefAnswer = {
   question: string;
   mode: "walker" | "llm";
   contextSource: "fixture" | "live";
   verdict: "go" | "no-go" | "conditional";
   recommendation: string;
+  documentRelations: DocumentRelation[];
   contradictions: Contradiction[];
   walked: OpenedDocument[];
   wind: WindObservation;

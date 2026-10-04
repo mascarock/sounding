@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createContextClient } from "../sanity-context";
 import { hasLlmKey, runLlmBrief } from "./llm";
 import { walkBrief } from "./walker";
