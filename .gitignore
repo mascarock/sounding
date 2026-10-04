@@ -45,3 +45,5 @@ agent-tools/
 
 salt-wharf/
 *.tar.gz
+.wrangler/
+.wchunks-gz-b64/

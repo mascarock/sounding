@@ -1,12 +1,12 @@
 # Sounding
 
-Sounding is a small day-boat harbour briefing desk for the Sanity challenge, Path One. It answers questions across eight invented central Mediterranean harbours by walking Sanity-shaped context tools instead of trusting a keyword hit.
+Sounding is a small day-boat harbour briefing desk for the Sanity challenge, Path One. It shows why an agent must walk structured Sanity-shaped context instead of stopping at the first plausible harbour note.
 
 **Demonstration data only. Not an official navigation publication. Do not use this for real navigation.** Every pocket note, notice, depth, ferry reservation, and weather rule in this repository is invented.
 
-## The Story
+## The Trick
 
-The core case is Marsamxett on a Friday evening in a strong gregale.
+Marsamxett, Friday evening, strong gregale, 1.7 m draft.
 
 The 2019 pocket note says the Marsamxett inner pontoons sound 2.1 m at chart datum and that visiting day-boats are welcome alongside the three inner fingers. A keyword search for "Marsamxett" can easily stop there and quote the old book.
 
@@ -16,13 +16,49 @@ HN-2025-03 then cites HN-2024-17 and reserves those two outer berths for the fer
 
 The gregale rule says that in a north-easterly at 20 kn or more, those same two outer berths are the only visitor berths with usable shelter. So a 1.7 m visitor arriving Friday after 18:00 in a strong gregale has no safe visitor berth. The right answer is no-go, not the old 2.1 m welcome.
 
+## Run The Fixture
+
+Fixture mode is the default and needs no Sanity token, no LLM key, and no live knowledge-base call. It uses the committed invented corpus and the same four tool names as the live path:
+
+- `initial_context`
+- `schema_explorer`
+- `groq_query`
+- `array_field_reader`
+
+Run the desk on port 43173:
+
+```bash
+npm run dev
+```
+
+Open [http://127.0.0.1:43173](http://127.0.0.1:43173).
+
+Run the judge:
+
+```bash
+npm run judge
+```
+
+The judge checks three traps:
+
+- Marsamxett: no safe visitor berth, because the 2019 2.1 m inner-pontoon note is superseded by HN-2024-17 at 1.4 m, and the only sheltered outer berths are reserved after 18:00 Friday.
+- Syracuse: no-go for Inner Basin East at 2.8 m, because the 2019 3.5 m note is superseded by HN-2025-11 after the silt survey.
+- Pozzallo: no-go at 2.9 m on the commercial quay, because the later 3.2 m informal note does not supersede HN-2024-44.
+
+Proof files:
+
+- [docs/proof/judge.txt](docs/proof/judge.txt) is a saved fixture judge run.
+- [docs/proof/sounding.webm](docs/proof/sounding.webm) shows the Marsamxett answer with the old 2019 2.1 m note and the later HN-2024-17 / 1.4 m notice.
+- [docs/proof/sounding-vo.mp3](docs/proof/sounding-vo.mp3) is the voiceover audio for the walkthrough.
+- [docs/proof/desk-marsamxett.png](docs/proof/desk-marsamxett.png) and [docs/proof/desk-marsamxett-mobile.png](docs/proof/desk-marsamxett-mobile.png) are desktop and mobile screenshots.
+
 ## How The Desk Works
 
 The app starts with `initial_context`, asks the schema what fields and references exist, queries harbours, berths, source documents, and claims, then follows `supersedes`, `cites`, `appliesTo`, and weather-rule `effectBerths`.
 
 The deterministic walker is enough for judging. If an LLM key is present, the model can run the same tools, but fixture mode needs no token and remains the default.
 
-## Run Locally
+## Local Setup
 
 ```bash
 npm install
@@ -30,19 +66,6 @@ npm run dev
 ```
 
 Open [http://127.0.0.1:43173](http://127.0.0.1:43173).
-
-Leave `.env` empty for fixture mode. The fixture reads the committed invented corpus in `sanity/seed-data.ts` through the same tool names used by the live context path:
-
-- `initial_context`
-- `schema_explorer`
-- `groq_query`
-- `array_field_reader`
-
-Run the judge:
-
-```bash
-npm run judge
-```
 
 Build check:
 
@@ -66,7 +89,7 @@ To import the invented corpus into the existing dataset, see [sanity/IMPORT.md](
 
 ## Judge Cases
 
-`npm run judge` checks three traps:
+The saved fixture output is in [docs/proof/judge.txt](docs/proof/judge.txt). `npm run judge` checks:
 
 - Marsamxett: the 2019 2.1 m visitor welcome is replaced by a 1.4 m notice; the only sheltered outer berths are then reserved for the ferry Friday after 18:00.
 - Syracuse: a 2019 3.5 m inner-basin note is superseded by HN-2025-11 after a silt survey, closing Inner Basin East to drafts over 2.0 m.
